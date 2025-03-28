@@ -16,18 +16,18 @@ const GetUser = () => {
 
       const data = await response.json();
 
-      if (response.ok) {
-        setUser(data.user);
-        setError('');
-      } else {
-        setUser(null);
-        setError(data.message);
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong!");
       }
+
+      setUser(data.user);
+      setError('');
     } catch (err) {
-      console.error('Error fetching user:', err);
-      setError('Something went wrong! Please try again.');
+      setUser(null);
+      setError(err.message);
     }
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
@@ -48,9 +48,9 @@ const GetUser = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        
-        <button 
-          onClick={handleFetchUser} 
+
+        <button
+          onClick={handleFetchUser}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
         >
           Get User
